@@ -1,0 +1,63 @@
+{
+  "name": "gdscript-vscode",
+  "displayName": "gdscript-vscode",
+  "description": "",
+  "version": "0.1.0",
+  "publisher": "glincoln",
+  "engines": {
+    "vscode": "^1.5.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:engine.cfg",
+    "onLanguage:gdscript"
+  ],
+  "main": "./out/src/extension",
+  "contributes": {
+    "languages": [
+      {
+        "id": "gdscript",
+        "aliases": [
+          "Godot Engine Script",
+          "gdscript"
+        ],
+        "extensions": [
+          ".gd"
+        ],
+        "configuration": "./grammars/language.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "gdscript",
+        "scopeName": "source.gdscript",
+        "path": "./grammars/gdscript.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "gdscript",
+        "path": "./grammars/snippets.json"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./",
+    "compile": "tsc -watch -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.32",
+    "@types/node": "^6.0.40",
+    "@types/request": "0.0.39",
+    "mocha": "^2.3.3",
+    "typescript": "^2.0.3",
+    "vscode": "^1.0.0"
+  },
+  "dependencies": {
+    "request": "^2.79.0"
+  }
+}
