@@ -1,6 +1,6 @@
 import {
     DocumentSymbolProvider, TextDocument, SymbolInformation, CancellationToken,
-    SymbolKind, Range, WorkspaceSymbolProvider, Uri
+    SymbolKind, Range, WorkspaceSymbolProvider, Uri, workspace
 } from 'vscode';
 
 import GodotScriptSymbolParser from './symbolParser';
@@ -20,13 +20,32 @@ function getSymbols(document: TextDocument) {
         }
     }
 
-    symbolCache[document.fileName] = symbols;
+    symbolCache[document.uri.fsPath] = symbols;
+    return symbols;
+}
+
+function getAllSymbols(filter: string) {
+    const symbols: SymbolInformation[] = [];
+    for (let file of Object.keys(symbolCache)) {        
+        symbols.push(...symbolCache[file].filter(s => s.name.includes(filter)));
+    }
+
     return symbols;
 }
 
 export class GodotScriptWorkspaceSymbolProvider implements WorkspaceSymbolProvider {
-    public provideWorkspaceSymbols(query: string, token: CancellationToken): SymbolInformation[] {
-        return [];
+    public provideWorkspaceSymbols(query: string, token: CancellationToken): Thenable<SymbolInformation[]> {
+        return new Promise<SymbolInformation[]>((resolve, reject) => {
+            workspace.findFiles("**/*.gd", "").then(files => {
+                files.forEach(uri => {
+                    if (!symbolCache[uri.fsPath]) {
+                        console.log("Rebuilding symbols for file " + uri.fsPath);
+                        workspace.openTextDocument(uri).then(doc => getSymbols(doc));
+                    }
+                });
+            });
+            resolve(getAllSymbols(query));
+        })
     }
 }
 
