@@ -14,7 +14,7 @@ interface CompletionResponse {
 }
 
 export class CompletionService {
-    static GetCompletions(request: CompletionRequest): Promise<CompletionItem[]> {
+    static getCompletions(request: CompletionRequest): Promise<CompletionItem[]> {
         return new Promise(resolve => {
             CompletionService.post(request)
                 .then(cr => resolve(cr.suggestions.map(s => new CompletionItem(s))));
