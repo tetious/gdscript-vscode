@@ -58,6 +58,7 @@
     "vscode": "^1.0.0"
   },
   "dependencies": {
+    "md5": "^2.2.1",
     "request": "^2.79.0"
   }
 }
